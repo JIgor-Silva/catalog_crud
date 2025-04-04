@@ -1,4 +1,5 @@
 name: CI
+
 on:
   pull_request:
   push:
@@ -62,7 +63,9 @@ jobs:
           bundler-cache: true
 
       - name: Configurar chave do Rails
-        run: echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
+        run: |
+          echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
+          chmod 600 config/master.key
 
       - name: Aguardar banco de dados
         run: |
@@ -72,20 +75,21 @@ jobs:
             sleep 2
           done
 
-      - name: Instalar Yarn
-        run: |
-          corepack enable
-          yarn set version classic
-          yarn install --check-files
+      - name: Install Node.js dependencies
+        run: npm install
 
       - name: Precompilar assets
-        run: bin/rails assets:precompile
+        run: |
+          RAILS_ENV=test bin/rails assets:precompile
 
       - name: Run tests
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails db:test:prepare test test:system
+        run: |
+          bin/rails db:test:prepare
+          bin/rails test
+          bin/rails test:system
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
