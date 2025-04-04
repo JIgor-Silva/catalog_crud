@@ -62,12 +62,22 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Instalar Yarn e Esbuild
+      - name: Configurar chave do Rails
+        run: echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
+
+      - name: Aguardar banco de dados
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -p 5432 && break
+            echo "Aguardando PostgreSQL..."
+            sleep 2
+          done
+
+      - name: Instalar Yarn
         run: |
           corepack enable
           yarn set version classic
           yarn install --check-files
-          yarn global add esbuild
 
       - name: Precompilar assets
         run: bin/rails assets:precompile
