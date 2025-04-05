@@ -78,9 +78,14 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install
 
+      - name: Build JS com esbuild
+        run: npm run build
+
+      - name: Build CSS com PostCSS/Tailwind (se tiver)
+        run: npm run build:css
+
       - name: Precompilar assets
-        run: |
-          RAILS_ENV=test bin/rails assets:precompile
+        run: RAILS_ENV=test bin/rails assets:precompile
 
       - name: Run tests
         env:

@@ -1,0 +1,95 @@
+<div class="p-10">
+  <h1 class="mb-8 font-extrabold text-4xl">Cadastrar Pessoa</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    
+    <%= form_with model: @person, url: people_path, local: true do |f| %>
+
+      <!-- Nome -->
+      <div>
+        <%= f.label :name, "Nome", class: "block font-semibold" %>
+        <%= f.text_field :name, class: "w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none mt-1", required: true, autofocus: true %>
+      </div>
+
+      <!-- Email -->
+      <div class="mt-4">
+        <%= f.label :email, "Email", class: "block font-semibold" %>
+        <%= f.email_field :email, class: "w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none mt-1", required: true %>
+      </div>
+
+      <!-- Senha -->
+      <div class="mt-4">
+        <%= f.label :password, "Senha", class: "block font-semibold" %>
+        <%= f.password_field :password, class: "w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none mt-1", required: true, autocomplete: "new-password" %>
+      </div>
+
+      <!-- Telefones -->
+      <div class="mt-8">
+        <h2 class="font-bold text-xl mb-2">Telefones</h2>
+        <div data-phone-fields class="space-y-4">
+          <%= f.fields_for :phone_numbers do |phone| %>
+            <div class="grid grid-cols-5 gap-2">
+              <%= phone.text_field :number, placeholder: "Número", class: "col-span-3 bg-gray-100 rounded-lg p-3 text-lg" %>
+              <%= phone.select :operation_type, options_for_select([["Celular", "mobile"], ["Residencial", "home"], ["Comercial", "work"], ["Outro", "other"]]), {}, class: "col-span-2 bg-gray-100 rounded-lg p-3 text-lg" %>
+            </div>
+          <% end %>
+        </div>
+        <button type="button" onclick="addPhoneField()" class="mt-2 text-indigo-600 hover:underline text-sm font-semibold">+ Adicionar telefone</button>
+      </div>
+
+      <!-- Endereço -->
+      <div class="mt-8">
+        <h2 class="font-bold text-xl mb-2">Endereço</h2>
+        <%= f.fields_for :address do |address| %>
+          <div class="space-y-3">
+            <%= address.text_field :street, placeholder: "Rua", class: "w-full bg-gray-100 rounded-lg p-3 text-lg" %>
+            <div class="grid grid-cols-3 gap-3">
+              <%= address.text_field :city, placeholder: "Cidade", class: "bg-gray-100 rounded-lg p-3 text-lg" %>
+              <%= address.text_field :state, placeholder: "UF", class: "bg-gray-100 rounded-lg p-3 text-lg" %>
+              <%= address.text_field :zp_code, placeholder: "CEP", class: "bg-gray-100 rounded-lg p-3 text-lg" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Submit -->
+      <div class="flex items-center justify-between mt-10">
+        <%= f.submit "Cadastrar", class: "flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10" %>
+        <%= link_to "Já cadastrado?", people_path, class: "font-semibold text-indigo-600 hover:underline" %>
+      </div>
+    <% end %>
+
+    <!-- Instruções -->
+    <aside>
+      <div class="bg-gray-100 p-8 rounded">
+        <h2 class="font-bold text-2xl">Instruções</h2>
+        <ul class="list-disc mt-4 list-inside text-gray-700">
+          <li>Preencha todos os campos obrigatórios</li>
+          <li>O email deve ser único e válido</li>
+          <li>A senha deve conter pelo menos 6 caracteres</li>
+          <li>Você pode adicionar múltiplos telefones</li>
+        </ul>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script>
+  function addPhoneField() {
+    const container = document.querySelector('[data-phone-fields]');
+    const index = container.children.length;
+
+    const newField = document.createElement('div');
+    newField.className = "grid grid-cols-5 gap-2";
+    newField.innerHTML = `
+      <input name="person[phone_numbers_attributes][${index}][number]" placeholder="Número" class="col-span-3 bg-gray-100 rounded-lg p-3 text-lg">
+      <select name="person[phone_numbers_attributes][${index}][operation_type]" class="col-span-2 bg-gray-100 rounded-lg p-3 text-lg">
+        <option value="mobile">Celular</option>
+        <option value="home">Residencial</option>
+        <option value="work">Comercial</option>
+        <option value="other">Outro</option>
+      </select>
+    `;
+    container.appendChild(newField);
+  }
+</script>
