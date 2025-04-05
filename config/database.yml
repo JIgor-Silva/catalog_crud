@@ -12,12 +12,13 @@ development:
   port: 5432
 
 test:
+  test:
   <<: *default
-  database: <%= ENV.fetch("DATABASE_NAME", "phone_catalog_test") %>
-  username: postgres
-  password: 4421
-  host: localhost
-  port: 5432
+  database: <%= ENV.fetch('DATABASE_NAME', 'phone_catalog_test_coverage') %>
+  username: <%= ENV.fetch('POSTGRES_USERNAME', 'postgres') %>
+  password: <%= ENV.fetch('POSTGRES_PASSWORD', '4421') %>
+  host: <%= ENV.fetch('POSTGRES_HOST', 'localhost') %>
+  port: <%= ENV.fetch('POSTGRES_PORT', 5432) %>
 
 production:
   primary: &primary_production

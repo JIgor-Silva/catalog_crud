@@ -53,6 +53,10 @@ jobs:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_test
       DATABASE_NAME: phone_catalog_test
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: 4421
 
     steps:
       - name: Install system dependencies
