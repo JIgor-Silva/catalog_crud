@@ -9,10 +9,6 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
 
-    env:
-      RAILS_ENV: test
-      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_test
-
     services:
       postgres:
         image: postgres
@@ -27,6 +23,10 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_test
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Instalar dependências do sistema
+      - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libpq-dev
 
       - name: Configurar chave do Rails
@@ -45,21 +45,22 @@ jobs:
           echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
           chmod 600 config/master.key
 
-      - name: Instalar dependências JS
+      - name: Install Node.js dependencies
         run: npm install
 
-      - name: Compilar assets
-        run: |
-          npm run build
-          npm run build:css || echo "CSS não configurado com Tailwind"
+      - name: Build JS com esbuild
+        run: npm run build
 
-      - name: Preparar banco de dados
+      - name: Build CSS com PostCSS/Tailwind (se configurado)
+        run: npm run build:css || echo "Tailwind não configurado"
+
+      - name: Prepare Database
         run: bin/rails db:prepare
 
-      - name: Executar testes com RSpec e gerar cobertura
+      - name: Run tests with RSpec and generate coverage
         run: bundle exec rspec
 
-      - name: Upload para Codecov
+      - name: Upload cobertura para Codecov
         uses: codecov/codecov-action@v5
         with:
           files: coverage/.resultset.json
