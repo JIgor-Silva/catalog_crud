@@ -1,2 +1,50 @@
-<h1>Peoples#index</h1>
-<p>Find me in app/views/peoples/index.html.erb</p>
+<div class="p-10">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-4xl font-extrabold">Pessoas Cadastradas</h1>
+    <%= link_to "Nova Pessoa", people_path, class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg" %>
+
+  </div>
+
+  <% if @people.any? %>
+    <div class="overflow-x-auto shadow border border-gray-200 rounded-lg">
+      <table class="text-sm">
+        <thead class="bg-gray-100 text-gray-700 uppercase text-left text-xs">
+          <tr>
+            <th class="px-6 py-3 font-semibold">Nome</th>
+            <th class="px-6 py-3 font-semibold">Email</th>
+            <th class="px-6 py-3 font-semibold">Telefones</th>
+            <th class="px-6 py-3 font-semibold">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 bg-white">
+          <% @people.each do |person| %>
+            <tr>
+              <td class="px-6 py-4 font-medium text-gray-900"><%= person.name %></td>
+              <td class="px-6 py-4 text-gray-700"><%= person.email %></td>
+              <td class="px-6 py-4 text-gray-700">
+                <% if person.phone_numbers.any? %>
+                  <ul class="space-y-1">
+                    <% person.phone_numbers.each do |phone| %>
+                      <li><%= phone.number %> <span class="text-xs text-gray-500">(<%= phone.operation_type %>)</span></li>
+                    <% end %>
+                  </ul>
+                <% else %>
+                  <span class="text-gray-400 italic">Nenhum</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm space-x-2">
+                <%= link_to "Ver", person_path(person), class: "text-indigo-600 hover:underline font-semibold" %>
+                <%= link_to "Editar", edit_person_path(person), class: "text-yellow-600 hover:underline font-semibold" %>
+                <%= link_to "Excluir", person_path(person), method: :delete, data: { confirm: "Tem certeza que deseja excluir?" }, class: "text-red-600 hover:underline font-semibold" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg mt-8">
+      Nenhuma pessoa cadastrada ainda.
+    </div>
+  <% end %>
+</div>
