@@ -13,7 +13,11 @@ development:
 
 test:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  database: phone_catalog_test
+  username: postgres
+  password: 4421
+  host: localhost
+  port: 5432
 
 production:
   primary: &primary_production
