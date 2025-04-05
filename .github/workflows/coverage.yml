@@ -11,13 +11,26 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:15
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: 4421
+          POSTGRES_DB: phone_catalog_test_coverage
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_test_coverage
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: 4421
 
     steps:
       - name: Checkout code
@@ -29,37 +42,40 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Instalar dependências do sistema
-        run: sudo apt-get update && sudo apt-get install -y libpq-dev
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev postgresql-client
 
       - name: Configurar chave do Rails
         run: |
           echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
           chmod 600 config/master.key
 
-      - name: Instalar dependências JS
-        run: npm install
-
-      - name: Compilar assets
+      - name: Wait for PostgreSQL to be ready
         run: |
-          npm run build
-          npm run build:css || echo "CSS não configurado com Tailwind"
+          for i in {1..10}; do
+            if pg_isready -h localhost -p 5432 -U postgres -d phone_catalog_test_coverage; then
+              echo "PostgreSQL is ready"
+              exit 0
+            fi
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 5
+          done
+          echo "PostgreSQL failed to become ready"
+          exit 1
 
-      - name: Prepara o banco de dados
-        env:
-          RAILS_ENV: test
+      - name: Setup database
         run: |
-          bin/rails db:test:prepare
+          bin/rails db:create
+          bin/rails db:migrate
 
-      - name: Executar testes com RSpec e gerar cobertura
-        env:
-          RAILS_ENV: test
+      - name: Run tests with RSpec and generate coverage
         run: bundle exec rspec
 
-      - name: Upload para Codecov
+      - name: Upload cobertura para Codecov
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Pode remover se o repo for público
           files: coverage/.resultset.json
           flags: rspec
           name: codecov-coverage-only
