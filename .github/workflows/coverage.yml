@@ -9,6 +9,10 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
 
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432
+
     services:
       postgres:
         image: postgres
@@ -17,7 +21,11 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Checkout code
@@ -46,20 +54,14 @@ jobs:
           npm run build:css || echo "CSS não configurado com Tailwind"
 
       - name: Prepara o banco de dados
-        env:
-          RAILS_ENV: test
-        run: |
-          bin/rails db:test:prepare
+        run: bin/rails db:test:prepare
 
       - name: Executar testes com RSpec e gerar cobertura
-        env:
-          RAILS_ENV: test
         run: bundle exec rspec
 
       - name: Upload para Codecov
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Pode remover se o repo for público
           files: coverage/.resultset.json
           flags: rspec
           name: codecov-coverage-only
