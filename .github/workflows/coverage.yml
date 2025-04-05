@@ -11,7 +11,7 @@ jobs:
 
     env:
       RAILS_ENV: test
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/phone_catalog_test
+      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_test
 
     services:
       postgres:
@@ -22,10 +22,10 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
+          --health-retries=5
 
     steps:
       - name: Checkout code
@@ -53,8 +53,8 @@ jobs:
           npm run build
           npm run build:css || echo "CSS não configurado com Tailwind"
 
-      - name: Prepara o banco de dados
-        run: bin/rails db:test:prepare
+      - name: Preparar banco de dados
+        run: bin/rails db:prepare
 
       - name: Executar testes com RSpec e gerar cobertura
         run: bundle exec rspec
