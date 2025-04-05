@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
 
 jobs:
   coverage:
+    needs: CI
     runs-on: ubuntu-latest
 
     services:
@@ -25,8 +30,8 @@ jobs:
 
     env:
       RAILS_ENV: test
-      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_coverage_test
-      DATABASE_NAME: phone_catalog_coverage_test
+      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_test_coverage
+      DATABASE_NAME: phone_catalog_test_coverage
 
     steps:
       - name: Checkout code
@@ -39,7 +44,7 @@ jobs:
           bundler-cache: true
 
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libpq-dev
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev node-gyp pkg-config python-is-python3
 
       - name: Configurar chave do Rails
         run: |
@@ -54,6 +59,19 @@ jobs:
 
       - name: Build CSS com PostCSS/Tailwind (se configurado)
         run: npm run build:css || echo "Tailwind não configurado"
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          for i in {1..10}; do
+            if pg_isready -U postgres -h localhost -p 5432; then
+              echo "PostgreSQL is ready"
+              exit 0
+            fi
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 5
+          done
+          echo "PostgreSQL failed to become ready"
+          exit 1
 
       - name: Prepare Database
         run: bin/rails db:prepare
