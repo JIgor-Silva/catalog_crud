@@ -13,7 +13,7 @@ development:
 
 test:
   <<: *default
-  database: phone_catalog_test
+  database: <%= ENV.fetch("DATABASE_NAME", "phone_catalog_test") %>
   username: postgres
   password: 4421
   host: localhost

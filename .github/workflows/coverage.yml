@@ -25,7 +25,8 @@ jobs:
 
     env:
       RAILS_ENV: test
-      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_test
+      DATABASE_URL: postgres://postgres:4421@localhost:5432/phone_catalog_coverage_test
+      DATABASE_NAME: phone_catalog_coverage_test
 
     steps:
       - name: Checkout code
