@@ -1,15 +1,13 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  street: MyString
-  city: MyString
-  state: MyString
-  zp_code: MyString
+  street: "123 Main St"
+  city: "Springfield"
+  state: "IL"
+  zp_code: "12345"
   person: one
 
 two:
-  street: MyString
-  city: MyString
-  state: MyString
-  zp_code: MyString
+  street: "456 Oak Ave"
+  city: "Shelbyville"
+  state: "IL"
+  zp_code: "62705"
   person: two
