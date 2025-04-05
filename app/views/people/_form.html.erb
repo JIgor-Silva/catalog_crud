@@ -1,8 +1,9 @@
 <div class="p-10">
   <h1 class="mb-8 font-extrabold text-4xl">Cadastrar Pessoa</h1>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    
-    <%= form_with model: @person, url: people_path, local: true do |f| %>
+   
+
+    <%= form_with model: @person, url: new_person_path, local: true do |f| %>
 
       <!-- Nome -->
       <div>
@@ -54,7 +55,7 @@
       <!-- Submit -->
       <div class="flex items-center justify-between mt-10">
         <%= f.submit "Cadastrar", class: "flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10" %>
-        <%= link_to "Já cadastrado?", people_path, class: "font-semibold text-indigo-600 hover:underline" %>
+        <%= link_to "Já cadastrado?", new_person_path, class: "font-semibold text-indigo-600 hover:underline" %>
       </div>
     <% end %>
 
