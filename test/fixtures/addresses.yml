@@ -2,12 +2,12 @@ one:
   street: "123 Main St"
   city: "Springfield"
   state: "IL"
-  zp_code: "62704"
-  person_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  zp_code: "12345"
+  person: one
 
 two:
   street: "456 Oak Ave"
   city: "Shelbyville"
   state: "IL"
   zp_code: "62705"
-  person_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
+  person: two
