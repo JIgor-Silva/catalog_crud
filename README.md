@@ -1,24 +1,50 @@
-# README
+# 📚 Catalog CRUD API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[![Test Coverage](https://codecov.io/gh/JIgor-Silva/catalog_crud/branch/main/graph/badge.svg?token=QV6ER90CHL&style=flat-square&label=Test%20Coverage)](https://codecov.io/gh/JIgor-Silva/catalog_crud)
 
-Things you may want to cover:
+## 🛠️ Stack Tecnológica
 
-* Ruby version
+### Core
+- **Ruby** 3.3.0
+- **Rails** 8.0.2 (API Mode)
+- **PostgreSQL** 14+
+- **Node.js** 18+
 
-* System dependencies
+### Principais Dependências
+| Tipo           | Tecnologias                          |
+|----------------|--------------------------------------|
+| **Backend**    | Puma, Solid Queue, Solid Cache       |
+| **Frontend**   | Propshaft, esbuild, TailwindCSS      |
+| **Testes**     | RSpec, SimpleCov, Capybara           |
+| **Qualidade**  | RuboCop, Brakeman                    |
+| **Deploy**     | Kamal (Docker)                       |
 
-* Configuration
+## 🚀 Pré-requisitos
+# Verifique as versões instaladas
+### Principais Dependências
+| Tipo           | Tecnologias                          |
+|----------------|--------------------------------------|
+| **ruby**       |  >= 3.3.0                            |
+| **rails**      |  >= 18.0.0                           |
+| **node**       |  >= 18.0.0                           |
+| **npm**        |  >= 9.0.0                            |
+| **psql**       |  >= 14.0                             |
 
-* Database creation
 
-* Database initialization
+# 1. Clone o repositório
+git clone https://github.com/JIgor-Silva/catalog_crud.git
+### cd catalog_crud
 
-* How to run the test suite
+# 2. Instale dependências
+### bundle install
+### npm install
 
-* Services (job queues, cache servers, search engines, etc.)
+# 3. Configure o banco de dados
+### cp .env.example .env
+# Edite o .env com suas credenciais
 
-* Deployment instructions
+# 4. Prepare o banco
+### rails db:create db:migrate db:seed
 
-* ...
+# 5. Inicie o servidor
+### bin/dev
