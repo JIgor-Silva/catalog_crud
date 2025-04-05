@@ -2,7 +2,7 @@ class PeoplesController < ApplicationController
   before_action :set_person, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @persons = Person.all.includes(:phone_numbers, :addresses)
+    @persons = Person.all.includes(:phone_numbers, :address)
   end
 
   def show
@@ -11,18 +11,18 @@ class PeoplesController < ApplicationController
   def new
     @person = Person.new
     @person.phone_numbers.build
-    @person.build_addresses
+    @person.build_address
   end
 
   def edit
     @person.phone_numbers.build if @person.phone_numbers.empty?
-    @person.build_addresses if @person.addresses.nil?
+    @person.build_address if @person.address.nil?
   end
 
   def create
     @person = Person.new(person_params)
     if @person.save
-      redirect_to @person, notice: "Pessoa criada com sucesso."
+      redirect_to people_path(@person), notice: "Pessoa criada com sucesso."
     else
       render :new, status: :unprocessable_entity
     end
@@ -58,7 +58,7 @@ class PeoplesController < ApplicationController
         :operation_type,
         :_destroy
       ],
-      addresses_attributes: [
+      address_attributes: [
         :id,
         :street,
         :city,
