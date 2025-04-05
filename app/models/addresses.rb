@@ -1,4 +1,4 @@
-class Address < ApplicationRecord
+class Addresses < ApplicationRecord
   belongs_to :person
 
   validates :street, :city, :state, presence: true

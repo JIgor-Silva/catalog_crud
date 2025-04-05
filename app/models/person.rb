@@ -8,5 +8,5 @@ class Person < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }
 
   accepts_nested_attributes_for :phone_numbers, allow_destroy: true, reject_if: :all_blank
-  accepts_nested_attributes_for :address
+  accepts_nested_attributes_for :addresses
 end

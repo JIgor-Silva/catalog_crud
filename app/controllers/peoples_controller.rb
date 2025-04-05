@@ -2,7 +2,7 @@ class PeoplesController < ApplicationController
   before_action :set_person, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @persons = Person.all.includes(:phone_numbers, :address)
+    @persons = Person.all.includes(:phone_numbers, :addresses)
   end
 
   def show
@@ -11,12 +11,12 @@ class PeoplesController < ApplicationController
   def new
     @person = Person.new
     @person.phone_numbers.build
-    @person.build_address
+    @person.build_addresses
   end
 
   def edit
     @person.phone_numbers.build if @person.phone_numbers.empty?
-    @person.build_address if @person.address.nil?
+    @person.build_addresses if @person.addresses.nil?
   end
 
   def create
@@ -58,7 +58,7 @@ class PeoplesController < ApplicationController
         :operation_type,
         :_destroy
       ],
-      address_attributes: [
+      addresses_attributes: [
         :id,
         :street,
         :city,
