@@ -49,6 +49,9 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "simplecov", require: false
   gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "shoulda-matchers"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
@@ -65,5 +68,5 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "selenium-webdriver"
+  gem "selenium-webdriver"             # Para gerar dados fake
 end
