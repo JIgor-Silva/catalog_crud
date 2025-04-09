@@ -1,41 +1,52 @@
-<div class="p-10">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-4xl font-extrabold">Pessoas Cadastradas</h1>
-    <%= link_to "Nova Pessoa", people_path, class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg" %>
-
-  </div>
-
+<div class="p-80 max-w-7xl mx-auto">
   <% if @people.any? %>
-    <div class="overflow-x-auto shadow border border-gray-200 rounded-lg">
-      <table class="text-sm">
-        <thead class="bg-gray-100 text-gray-700 uppercase text-left text-xs">
-          <tr>
-            <th class="px-6 py-3 font-semibold">Nome</th>
-            <th class="px-6 py-3 font-semibold">Email</th>
-            <th class="px-6 py-3 font-semibold">Telefones</th>
-            <th class="px-6 py-3 font-semibold">Ações</th>
+    <div class="overflow-x-auto border border-gray-200 rounded-2xl shadow-lg bg-white">
+      <table class="min-w-full text-sm text-gray-800 divide-y divide-gray-200">
+        <thead class="bg-gray-100">
+          <tr class="text-left">
+            <th class="px-5 py-3 font-semibold w-1/4">Nome</th>
+            <th class="px-5 py-3 font-semibold w-1/4">Email</th>
+            <th class="px-5 py-3 font-semibold w-1/4">Telefones</th>
+            <th class="px-5 py-3 font-semibold w-1/4">
+              <div class="flex items-center justify-between">
+                <span>Ações</span>
+                <%= link_to new_person_path, class: "ml-2 whitespace-nowrap bg-green-600 hover:bg-green-700 text-white text-xs font-semibold py-2 px-4 rounded-lg shadow" do %>
+                  Novo Cadastro
+                <% end %>
+              </div>
+            </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100 bg-white">
+        <tbody class="bg-white divide-y divide-gray-100">
           <% @people.each do |person| %>
-            <tr>
-              <td class="px-6 py-4 font-medium text-gray-900"><%= person.name %></td>
-              <td class="px-6 py-4 text-gray-700"><%= person.email %></td>
-              <td class="px-6 py-4 text-gray-700">
+            <tr class="hover:bg-gray-500 transition-colors duration-200 ease-in-out">
+              <td class="px-5 py-3 font-medium truncate max-w-xs"><%= person.name %></td>
+              <td class="px-5 py-3 truncate max-w-xs"><%= person.email %></td>
+              <td class="px-5 py-3">
                 <% if person.phone_numbers.any? %>
                   <ul class="space-y-1">
                     <% person.phone_numbers.each do |phone| %>
-                      <li><%= phone.number %> <span class="text-xs text-gray-500">(<%= phone.operation_type %>)</span></li>
+                      <li class="flex items-center text-sm text-gray-700">
+                        <span class="inline-block w-4 mr-1 text-gray-500">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                        </span>
+                        <span><%= phone.number %></span>
+                        <span class="text-xs text-gray-500 ml-1">(<%= phone.operation_type %>)</span>
+                      </li>
                     <% end %>
                   </ul>
                 <% else %>
-                  <span class="text-gray-400 italic">Nenhum</span>
+                  <span class="italic text-xs text-gray-400">Nenhum</span>
                 <% end %>
               </td>
-              <td class="px-6 py-4 text-sm space-x-2">
-                <%= link_to "Ver", person_path(person), class: "text-indigo-600 hover:underline font-semibold" %>
-                <%= link_to "Editar", edit_person_path(person), class: "text-yellow-600 hover:underline font-semibold" %>
-                <%= link_to "Excluir", person_path(person), method: :delete, data: { confirm: "Tem certeza que deseja excluir?" }, class: "text-red-600 hover:underline font-semibold" %>
+              <td class="px-5 py-3">
+                <div class="inline-flex gap-2">
+                  <%= link_to "Ver", person_path(person), class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow whitespace-nowrap" %>
+                  <%= link_to "Editar", edit_person_path(person), class: "px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-xs font-semibold shadow whitespace-nowrap" %>
+                  <%= link_to "Excluir", person_path(person), method: :delete, data: { confirm: "Tem certeza?" }, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold shadow whitespace-nowrap" %>
+                </div>
               </td>
             </tr>
           <% end %>
@@ -43,8 +54,17 @@
       </table>
     </div>
   <% else %>
-    <div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg mt-8">
-      Nenhuma pessoa cadastrada ainda.
+    <div class="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-yellow-700">Nenhuma pessoa cadastrada ainda.</p>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
