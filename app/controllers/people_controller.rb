@@ -1,11 +1,12 @@
 class PeopleController < ApplicationController
   before_action :set_person, only: [ :show, :edit, :update, :destroy ]
-
+  before_action :set_address_attributes, only: [ :new, :edit, :create, :update ]
+  before_action :set_phone_numbers, only: [ :new, :edit, :create, :update ]
   # GET /people
   def index
     @people = Person.all.includes(:phone_numbers, :address)
     respond_to do |format|
-      format.html  # ← isso permite responder a .html
+      format.html 
       format.json { render json: @people }
     end
   end
@@ -53,7 +54,7 @@ class PeopleController < ApplicationController
   # PATCH/PUT /people/1
   def update
     if @person.update(person_params)
-      redirect_to person_path(@person), notice: "Pessoa atualizada com sucesso."
+      redirect_to person_path, notice: "Pessoa atualizada com sucesso."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -67,8 +68,21 @@ class PeopleController < ApplicationController
 
   private
 
+  def set_address_attributes
+    @states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+               'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+               'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
+  end
+
+  def set_phone_numbers
+    @operation_types = ['Residencial', 'Celular', 'Comercial']
+  end
+
+
   def set_person
-    @person = Person.find(params[:id])
+    @person = Person.includes(:address, :phone_numbers).find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Pessoa não encontrada" }, status: :not_found
   end
 
   def person_params
